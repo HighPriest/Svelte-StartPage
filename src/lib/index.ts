@@ -78,3 +78,5 @@ export const configStore = writable<ConfigType>({
         ]
     ]
 });
+
+export const regex = writable<string>("");
