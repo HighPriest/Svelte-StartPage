@@ -1,25 +1,57 @@
 <script lang="ts">
-    import { configStore, regex } from '$lib/index.ts';
+	import { configStore, regex } from '$lib/index.ts';
 
-    function matchLink(name:string, regex:string) {
-        console.log("Match attempt");
-        // On every update, reset selection (pivot) to 0
-        let match = new RegExp(regex ? regex : ".", "i"); // Check if regex has content. If it does not, set it to "."
-        return match.test(name);
+    let matchLink = (name:string, regex:string) => {
+		if (typeof window !== 'undefined') {
+			console.log("Match attempt");
+			// On every update, reset selection (pivot) to 0
+			let match = new RegExp(regex ? regex : ".", "i"); // Check if regex has content. If it does not, set it to "."
+			return match.test(name);
+		}
     }
+
+	let selectorState = $state({
+		selected: -3,
+		totalLinks: 0
+	});
+
+	function onKeyDown(e:any) {
+		switch (e.keyCode) {
+			case 38: // ArrowUp
+				selectorState.selected = selectorState.selected >= 0 ? 0 : selectorState.selected + 1;
+				console.log(selectorState.selected);
+				break;
+			case 40: // ArrowDown
+				selectorState.selected =
+					selectorState.selected <= -selectorState.totalLinks + 1
+						? -selectorState.totalLinks + 1
+						: selectorState.selected - 1;
+				console.log(selectorState.selected);
+				break;
+			default:
+				break;
+		}
+	};
 </script>
 
+<svelte:window on:keydown={onKeyDown} onload={() => {selectorState.totalLinks = 0}}/>
 {#each $configStore.links as group, index}
 	<div class="links box" style={`grid-column: ${index + 1}`}>
 		{#each group as link}
             {#if matchLink(link.name, $regex)}
-			    <a class="link" href={link.url}>{link.name}</a>
+                <a class="link" onshow={() => {selectorState.totalLinks++; console.log("Total Links: " + selectorState.totalLinks)}} class:action={() => {!selectorState.selected++}} href={link.url}>{link.name}</a>
             {/if}
 		{/each}
 	</div>
 {/each}
 
 <style>
+	.link.action {
+		/*background-color: rgba(255,255,255,.1);*/
+		background-color: red;
+		color: var(--hgl);
+	}
+
     .links {
         flex-direction: column;
         gap: 20px;
