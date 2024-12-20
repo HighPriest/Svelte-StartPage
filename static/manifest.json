@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "alpine",
+    "version": "2.0.0",
+    "author": "refact0r, HighPriest",
+    "description": "a minimalistic startpage, made with svelte",
+    "chrome_url_overrides": {
+        "newtab": "index.html"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "alpine-startpage@refact0r"
+        }
+    }
+}
