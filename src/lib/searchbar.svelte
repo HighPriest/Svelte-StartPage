@@ -1,11 +1,9 @@
 <script lang="ts">
-    function matchLinks(regex:string) {
-        console.log("Match attempt");
-    }
+    import { regex } from '$lib/index.ts';
 </script>
 
 <div class="search">
     <form method="GET" id="action">
-        <input type="text" oninput={(event) => matchLinks(event.currentTarget.value)} autofocus autocomplete="off">
+        <input type="text" oninput={(event) => regex.set(event.currentTarget.value)} autofocus autocomplete="off">
     </form>
 </div>
